@@ -1,7 +1,25 @@
-import { Text, Card, Input, Divider, Button } from "@geist-ui/core";
+import { useEffect, useState } from "react";
+import { Text, Card, Input, Divider, Button, useInput } from "@geist-ui/core";
 import styles from "../styles.module.scss";
 
+const DEFAULT_VALUE = "mongodb://localhost:27017";
+const REGEX_PREFIX = /^\w+:\/\//
+
 export default function NewConnection() {
+  const { state: connStr, bindings: connStrInputBindings } = useInput(DEFAULT_VALUE);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    if (!connStr) {
+      setError("");
+      return;
+    }
+    if (!REGEX_PREFIX.test(connStr)) {
+      setError(`Invalid connection string "${connStr}"`);
+      return;
+    }
+    setError("");
+  }, [connStr]);
+
   return (
     <Card className={styles.card} shadow={true}>
       <div style={{ marginBottom: "12px" }}>
@@ -15,11 +33,13 @@ export default function NewConnection() {
       <Input
         placeholder="eg mongodb+srv://username:password@cluster0-jtpxd.mongodb.net/admin"
         width="100%"
+        {...connStrInputBindings}
       >
         <Text h6>URI (Connection String)</Text>
       </Input>
+      {error && <Text marginTop={"12px"} marginBottom="0px" h6 type="error">{error}</Text>}
       <Divider marginTop={"12px"} marginBottom={"12px"} />
-      <Button type="success">Connect</Button>
+      <Button disabled={!connStr || error} type="success">Connect</Button>
     </Card>
   );
 }

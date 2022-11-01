@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Text, Card, Input, Divider, Button, useInput } from "@geist-ui/core";
+import { Text, Card, Input, Button, useInput } from "@geist-ui/core";
 import styles from "../styles.module.scss";
 
 const DEFAULT_VALUE = "mongodb://localhost:27017";
@@ -38,8 +38,9 @@ export default function NewConnection() {
         <Text h6>URI (Connection String)</Text>
       </Input>
       {error && <Text marginTop={"12px"} marginBottom="0px" h6 type="error">{error}</Text>}
-      <Divider marginTop={"12px"} marginBottom={"12px"} />
-      <Button disabled={!connStr || error} type="success">Connect</Button>
+      <Card.Footer>
+        <Button disabled={!connStr || error} type="success-light">Connect</Button>
+      </Card.Footer>
     </Card>
   );
 }
